@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { categorySlug, isPublished, sortByNewest } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('posts')).filter(isPublished);
+  const categories = [...new Set(allPosts.map((post) => post.data.category))];
+  return categories.map((category) => ({
+    params: { category: categorySlug(category) },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+const allPosts = (await getCollection('posts')).filter(isPublished);
+const posts = sortByNewest(allPosts.filter((post) => post.data.category === category));
+---
+
+<BaseLayout title={`${category} | DevNotes Lab`}>
+  <section class="container py-14">
+    <a class="text-sm text-cyan-200 hover:text-cyan-100" href="/categories/">Back to categories</a>
+    <h1 class="mt-5 text-4xl font-semibold text-white sm:text-5xl">{category}</h1>
+    <p class="mt-4 text-slate-300">Tutorials grouped under {category}.</p>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

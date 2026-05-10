@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { isPublished, sortByNewest } from '../../lib/posts';
+
+const posts = sortByNewest((await getCollection('posts')).filter(isPublished));
+---
+
+<BaseLayout title="Posts | DevNotes Lab">
+  <section class="container py-14">
+    <div class="max-w-2xl">
+      <p class="text-sm font-medium uppercase tracking-[0.2em] text-cyan-200">All tutorials</p>
+      <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">Posts</h1>
+      <p class="mt-4 text-slate-300">Small, focused guides for everyday developer tasks.</p>
+    </div>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

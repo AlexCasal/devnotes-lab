@@ -1,0 +1,35 @@
+---
+const githubUrl = 'https://github.com/alexcasal/devnotes-lab';
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/posts/', label: 'Posts' },
+  { href: '/categories/', label: 'Categories' }
+];
+---
+
+<header class="border-b border-cyan-300/15 bg-[#070812]/85 backdrop-blur">
+  <nav class="container flex min-h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-3 font-semibold tracking-tight">
+      <span class="grid h-9 w-9 place-items-center rounded-lg border border-cyan-300/40 bg-cyan-300/10 text-sm text-cyan-100 shadow-lg shadow-cyan-500/15">
+        DL
+      </span>
+      <span class="text-white">DevNotes Lab</span>
+    </a>
+
+    <div class="flex items-center gap-1 text-sm text-slate-300">
+      {links.map((link) => (
+        <a class="rounded-md px-3 py-2 transition hover:bg-cyan-300/10 hover:text-cyan-100" href={link.href}>
+          {link.label}
+        </a>
+      ))}
+      <a
+        class="ml-2 rounded-md border border-fuchsia-300/35 px-3 py-2 text-fuchsia-100 transition hover:bg-fuchsia-300/10"
+        href={githubUrl}
+        target="_blank"
+        rel="noreferrer"
+      >
+        GitHub
+      </a>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { categorySlug, isPublished } from '../../lib/posts';
+
+const posts = (await getCollection('posts')).filter(isPublished);
+const categories = [...new Set(posts.map((post) => post.data.category))]
+  .sort()
+  .map((category) => ({
+    category,
+    slug: categorySlug(category),
+    count: posts.filter((post) => post.data.category === category).length
+  }));
+---
+
+<BaseLayout title="Categories | DevNotes Lab">
+  <section class="container py-14">
+    <p class="text-sm font-medium uppercase tracking-[0.2em] text-cyan-200">Browse by topic</p>
+    <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">Categories</h1>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {categories.map(({ category, slug, count }) => (
+        <a class="rounded-xl border border-cyan-300/15 bg-[#10111f]/85 p-5 shadow-2xl shadow-black/20 transition hover:border-fuchsia-300/30 hover:bg-fuchsia-300/10" href={`/categories/${slug}/`}>
+          <span class="text-lg font-semibold text-white">{category}</span>
+          <span class="mt-2 block text-sm text-slate-400">{count} {count === 1 ? 'post' : 'posts'}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

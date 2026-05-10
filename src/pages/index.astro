@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { categorySlug, isPublished, sortByNewest } from '../lib/posts';
+
+const posts = sortByNewest((await getCollection('posts')).filter(isPublished));
+const latestPosts = posts.slice(0, 3);
+const categories = [...new Set(posts.map((post) => post.data.category))].sort();
+const githubUrl = 'https://github.com/alexcasal/devnotes-lab';
+---
+
+<BaseLayout>
+  <section class="container py-16 sm:py-24">
+    <div class="max-w-3xl">
+      <p class="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-cyan-200">Developer tutorial lab</p>
+      <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-7xl">DevNotes Lab</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+        Short, practical developer tutorials written in Markdown and open to contributions through GitHub pull requests.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="rounded-lg bg-fuchsia-400 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-300" href={githubUrl} target="_blank" rel="noreferrer">
+          Contribute on GitHub
+        </a>
+        <a class="rounded-lg border border-cyan-300/20 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/15" href="/posts/">
+          Read posts
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="text-sm text-cyan-200">Latest posts</p>
+        <h2 class="mt-2 text-3xl font-semibold text-white">Fresh practical guides</h2>
+      </div>
+      <a class="hidden text-sm text-cyan-200 hover:text-cyan-100 sm:block" href="/posts/">View all posts</a>
+    </div>
+    <div class="grid gap-4 md:grid-cols-3">
+      {latestPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <section class="container mt-16">
+    <p class="text-sm text-cyan-200">Categories</p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      {categories.map((category) => (
+        <a class="rounded-lg border border-cyan-300/15 bg-[#10111f]/85 px-4 py-3 text-sm text-slate-200 shadow-lg shadow-black/10 transition hover:border-fuchsia-300/30 hover:bg-fuchsia-300/10 hover:text-fuchsia-100" href={`/categories/${categorySlug(category)}/`}>
+          {category}
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
